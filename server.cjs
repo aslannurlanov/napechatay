@@ -19,6 +19,7 @@ const sessionCookie = "napechatay_session";
 const uploadsPath = path.join(__dirname, "uploads");
 let cachedChatId = process.env.TELEGRAM_CHAT_ID || "";
 let dbAvailable = false;
+let databaseReadyPromise = null;
 
 fs.mkdirSync(uploadsPath, { recursive: true });
 
@@ -309,6 +310,44 @@ async function sendTelegramLead(lead) {
   const data = await response.json();
   if (!data.ok) throw new Error(data.description || "Telegram sendMessage failed");
 }
+
+async function ensureDatabase() {
+  if (dbAvailable) return true;
+  if (databaseReadyPromise) return databaseReadyPromise;
+
+  databaseReadyPromise = (async () => {
+    if (!process.env.MONGODB_URI || !process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+      dbAvailable = false;
+      return false;
+    }
+
+    try {
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 8000 });
+      }
+      dbAvailable = true;
+      console.log("MongoDB connected");
+      await migrateLegacyIndexes();
+      await ensureAdmin();
+      await ensureServices();
+      await ensureContent();
+      return true;
+    } catch (error) {
+      dbAvailable = false;
+      console.warn(`MongoDB unavailable, starting local preview mode: ${error.message}`);
+      return false;
+    } finally {
+      databaseReadyPromise = null;
+    }
+  })();
+
+  return databaseReadyPromise;
+}
+
+app.use(async (req, _res, next) => {
+  if (req.path.startsWith("/api/")) await ensureDatabase();
+  next();
+});
 
 app.post("/api/auth/register", authLimiter, async (req, res, next) => {
   try {
@@ -786,21 +825,7 @@ async function ensureContent() {
 }
 
 async function start() {
-  if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI is not configured");
-  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) throw new Error("JWT_SECRET must contain at least 32 characters");
-
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 8000 });
-    dbAvailable = true;
-    console.log("MongoDB connected");
-    await migrateLegacyIndexes();
-    await ensureAdmin();
-    await ensureServices();
-    await ensureContent();
-  } catch (error) {
-    dbAvailable = false;
-    console.warn(`MongoDB unavailable, starting local preview mode: ${error.message}`);
-  }
+  await ensureDatabase();
 
   if (isProduction) {
     const distPath = path.join(__dirname, "dist");
@@ -818,7 +843,11 @@ async function start() {
   app.listen(port, "0.0.0.0", () => console.log(`NAPECHATAY site running at http://localhost:${port}`));
 }
 
-start().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (require.main === module) {
+  start().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+module.exports = app;
