@@ -16,7 +16,7 @@ const app = express();
 const port = Number(process.env.PORT || 5173);
 const isProduction = process.env.NODE_ENV === "production";
 const sessionCookie = "napechatay_session";
-const uploadsPath = path.join(__dirname, "uploads");
+const uploadsPath = process.env.VERCEL ? path.join("/tmp", "uploads") : path.join(__dirname, "uploads");
 let cachedChatId = process.env.TELEGRAM_CHAT_ID || "";
 let dbAvailable = false;
 let databaseReadyPromise = null;
