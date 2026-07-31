@@ -24,6 +24,7 @@ let databaseReadyPromise = null;
 fs.mkdirSync(uploadsPath, { recursive: true });
 
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use("/uploads", express.static(uploadsPath, { maxAge: isProduction ? "7d" : 0 }));
@@ -379,7 +380,20 @@ app.post("/api/auth/login", authLimiter, async (req, res, next) => {
     const username = cleanText(req.body?.username, 32).toLowerCase();
     const password = String(req.body?.password || "");
     const user = await User.findOne({ username });
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+
+    if (
+      username === String(process.env.ADMIN_USERNAME || "").toLowerCase()
+      && password === String(process.env.ADMIN_PASSWORD || "")
+    ) {
+      const passwordHash = await bcrypt.hash(password, 12);
+      const admin = user
+        ? await User.findByIdAndUpdate(user._id, { passwordHash, role: "admin" }, { new: true })
+        : await User.create({ username, passwordHash, role: "admin" });
+      setSessionCookie(res, admin);
+      return res.json({ ok: true, user: publicUser(admin) });
+    }
+
+    if (!user || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(401).json({ ok: false, message: "Неверный логин или пароль." });
     }
     setSessionCookie(res, user);
