@@ -8,58 +8,14 @@
       }
     },
     {
-      "src": "api/**/*.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/auth/login",
-      "dest": "/api/auth/login.js"
-    },
-    {
-      "src": "/api/auth/me",
-      "dest": "/api/auth/me.js"
-    },
-    {
-      "src": "/api/auth/register",
-      "dest": "/api/auth/register.js"
-    },
-    {
-      "src": "/api/auth/logout",
-      "dest": "/api/auth/logout.js"
-    },
-    {
-      "src": "/api/admin/dashboard",
-      "dest": "/api/admin/dashboard.js"
-    },
-    {
-      "src": "/api/admin/services",
-      "dest": "/api/admin/services.js"
-    },
-    {
-      "src": "/api/admin/leads",
-      "dest": "/api/admin/leads.js"
-    },
-    {
-      "src": "/api/admin/content",
-      "dest": "/api/admin/content.js"
-    },
-    {
-      "src": "/api/services",
-      "dest": "/api/services.js"
-    },
-    {
-      "src": "/api/site-content",
-      "dest": "/api/site-content.js"
-    },
-    {
-      "src": "/api/track",
-      "dest": "/api/track.js"
-    },
-    {
-      "src": "/api/lead",
-      "dest": "/api/lead.js"
+      "src": "/api/(.*)",
+      "dest": "/api/index.js?path=$1"
     },
     {
       "handle": "filesystem"
