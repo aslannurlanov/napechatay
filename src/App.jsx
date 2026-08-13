@@ -7,7 +7,8 @@ import {
   PackageCheck,
   Palette,
   Shirt,
-  Star,
+  Menu,
+  Play,
   Search,
   GripVertical,
   Eye,
@@ -17,6 +18,22 @@ import {
 
 const whatsappUrl = "https://wa.me/77019508000";
 const instagramUrl = "https://www.instagram.com/napechatay_astana/";
+
+const optimizedAssetMap = {
+  "/assets/ai/hero-lifestyle.png": "/assets/optimized/hero-lifestyle.webp",
+  "/assets/ai/gallery-gift.png": "/assets/optimized/gallery-gift.webp",
+  "/assets/ai/ai-national.png": "/assets/optimized/ai-national.webp",
+  "/assets/ai/ai-oversize.png": "/assets/optimized/ai-oversize.webp",
+  "/assets/ai/ai-branding.png": "/assets/optimized/ai-branding.webp",
+  "/assets/ai/gallery-team.png": "/assets/optimized/gallery-team.webp",
+  "/assets/ai/ai-kids.png": "/assets/optimized/ai-kids.webp",
+  "/assets/ai/ai-photo.png": "/assets/optimized/ai-photo.webp",
+  "/assets/ai/ai-tote.png": "/assets/optimized/ai-tote.webp",
+};
+
+function displayAsset(src) {
+  return optimizedAssetMap[src] || src;
+}
 
 const navItems = [
   ["О нас", "#about"],
@@ -107,50 +124,22 @@ const priceRows = [
 ];
 
 const galleryPhotos = [
-  ["/assets/ai/ai-oversize.png", "Oversize футболка"],
-  ["/assets/ai/ai-tote.png", "Шоппер с принтом"],
   ["/assets/ai/ai-national.png", "Национальный стиль"],
-  ["/assets/ai/ai-photo.png", "Фото-принт"],
-  ["/assets/ai/ai-branding.png", "Брендированный мерч"],
-  ["/assets/ai/ai-hero.png", "Студийная подача"],
-  ["/assets/ai/ai-kids.png", "Детский принт"],
-];
-
-const extraGalleryPhotos = [
-  ["/assets/ai/gallery-gift.png", "Подарочная упаковка"],
-  ["/assets/ai/gallery-team.png", "Командный мерч"],
-  ["/assets/ai/gallery-photo-set.png", "Фото-набор"],
-  ["/assets/ai/gallery-hoodie-set.png", "Худи и футболка"],
-  ["/assets/ai/hero-bg.png", "Студийная сцена"],
-  ["/assets/ai/ai-hero.png", "Печать и упаковка"],
-  ["/assets/ai/ai-branding.png", "Бренд-комплект"],
-  ["/assets/ai/ai-photo.png", "Подарочный принт"],
-  ["/assets/ai/ai-tote.png", "Шоппер с дизайном"],
-  ["/assets/ai/ai-national.png", "Орнаментальный принт"],
+  ["/assets/ai/ai-tote.png", "Шопперы с принтом"],
+  ["/assets/ai/ai-branding.png", "Мерч для брендов"],
+  ["/assets/ai/ai-kids.png", "Детские принты"],
 ];
 
 const galleryVideos = [
-  ["/assets/videos/look.mp4", "Готовый look"],
-  ["/assets/videos/national-style.mp4", "Национальный стиль"],
-  ["/assets/videos/nike-2.mp4", "Референсы принтов"],
+  ["/assets/videos/national-style.mp4", "Национальный принт", "/assets/gallery/poster-national.jpg"],
+  ["/assets/videos/shopper.mp4", "Шопперы с печатью", "/assets/gallery/poster-shopper.jpg"],
+  ["/assets/videos/look.mp4", "Процесс печати", "/assets/gallery/poster-look.jpg"],
 ];
 
-const reviews = [
-  {
-    name: "Алия",
-    role: "@aliya.print",
-    text: "Печать получилась настолько аккуратной, что футболка выглядит как готовый брендовый продукт.",
-  },
-  {
-    name: "Дана",
-    role: "@_danamuratovna_",
-    text: "Футболки классного качества, с принтом на любой вкус. Отдельное спасибо за комплимент и быструю обратную связь.",
-  },
-  {
-    name: "Astana Massage",
-    role: "@astana_massage_kz",
-    text: "Спасибо за профессионализм и качество. Брендирование формы тоже доверяем NAPECHATAY.",
-  },
+const reviewProof = [
+  ["/assets/reviews/review-story-1.png", "Отзыв Astana Massage", "@astana_massage_kz"],
+  ["/assets/reviews/review-story-2.png", "Отзыв о футболках", "@_danamuratovna_"],
+  ["/assets/reviews/review-whatsapp.png", "Отзыв в WhatsApp", "WhatsApp"],
 ];
 
 const faq = [
@@ -206,24 +195,27 @@ function trackWhatsAppClick() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ type: "whatsapp", path: window.location.pathname }),
+    keepalive: true,
   }).catch(() => {});
 }
 
 function Header() {
-  const [user, setUser] = React.useState(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
-    fetch("/api/auth/me")
-      .then((response) => response.json())
-      .then((data) => setUser(data.user || null))
-      .catch(() => {});
+    function closeOnEscape(event) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
   }, []);
 
   return (
     <header className="site-header fixed left-0 right-0 top-0 z-50">
       <div className="container-page flex h-16 items-center justify-between gap-4">
-        <a href="#top" className="site-header-brand brand-script text-3xl sm:text-4xl" aria-label="Napechatay">
-          Napechatay
+        <a href="#top" className="site-header-brand" aria-label="NAPECHATAY — на главную">
+          <span>NAPECHATAY</span>
+          <small>PRINT · DESIGN</small>
         </a>
 
         <nav className="hidden items-center gap-1 xl:flex" aria-label="Навигация">
@@ -239,27 +231,47 @@ function Header() {
         </nav>
 
         <div className="site-header-actions flex items-center gap-2">
-          <a className="site-header-login" href={user?.role === "admin" ? "/admin" : "/auth"}>
-            {user?.role === "admin" ? "Админ" : user?.username || "Войти"}
-          </a>
-          <a className="site-header-order px-4 sm:px-5" href={whatsappUrl} target="_blank" rel="noreferrer" onClick={trackWhatsAppClick}>
-            <WhatsAppMark className="size-5" />
-            <span className="hidden sm:inline">Заказать</span>
+          <button
+            className="site-header-menu-toggle xl:hidden"
+            type="button"
+            aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMenuOpen((current) => !current)}
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <a className="site-header-order px-4 sm:px-5" href="#contacts">
+            <span>Заказать</span>
           </a>
         </div>
       </div>
+      {menuOpen && (
+        <nav id="mobile-navigation" className="site-header-mobile-nav xl:hidden" aria-label="Мобильная навигация">
+          {navItems.map(([label, href]) => (
+            <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
 
-function Hero() {
-  const { hero } = useSiteContent();
+function Hero({ hero }) {
   const overlayOpacity = Math.max(0, Math.min(80, Number(hero.overlayOpacity ?? 35))) / 100;
   const overlayLeft = Math.min(0.62, overlayOpacity + 0.18);
   const overlayMiddle = Math.max(0.16, overlayOpacity * 0.62);
   return (
     <section id="top" className="hero-section relative overflow-hidden bg-ink text-white">
-      <img className="hero-bg-image hero-bg-animate absolute left-0 w-full object-cover" src={hero.image || fallbackHero.image} alt="Одежда с DTF-принтом в живой lifestyle-съемке" />
+      <img
+        className="hero-bg-image hero-bg-animate absolute left-0 w-full object-cover"
+        src={displayAsset(hero.image || fallbackHero.image)}
+        alt="Одежда с DTF-принтом в живой lifestyle-съемке"
+        width="1893"
+        height="831"
+        decoding="async"
+        fetchPriority="high"
+      />
       <div className="hero-contrast-overlay absolute inset-0" style={{ background: `linear-gradient(90deg, rgba(28,21,17,${overlayLeft}) 0%, rgba(28,21,17,${overlayMiddle}) 46%, rgba(28,21,17,0.05) 78%, rgba(28,21,17,0.02) 100%)` }} />
       <div className="hero-depth-overlay absolute inset-0" />
       <div className="hero-stage container-page relative flex items-center justify-start">
@@ -299,21 +311,11 @@ function About() {
             <p className="mt-6 max-w-md text-base leading-8 text-ink/62">
               Мы собираем вокруг принта весь образ: ткань, размер, композицию и подачу. Поэтому готовая вещь выглядит цельно.
             </p>
-            <div className="about-note mt-10 max-w-md rounded-lg bg-white p-6 shadow-soft">
+            <div className="about-note mt-10 max-w-md">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-clay">designed for your brand</p>
               <p className="mt-4 text-sm leading-7 text-ink/62">
                 Каждый заказ собирается как часть образа: от идеи и макета до аккуратной подачи готовой вещи.
               </p>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="rounded-lg bg-milk p-4">
-                  <p className="text-2xl font-black">24ч</p>
-                  <p className="mt-1 text-xs text-ink/45">быстрый запуск</p>
-                </div>
-                <div className="rounded-lg bg-ink p-4 text-white">
-                  <p className="text-2xl font-black">1+</p>
-                  <p className="mt-1 text-xs text-white/50">изделие</p>
-                </div>
-              </div>
             </div>
           </div>
           <div className="about-content-grid grid gap-5">
@@ -329,7 +331,7 @@ function About() {
               </div>
             </div>
             <div className="about-image-frame overflow-hidden rounded-lg p-2">
-              <img className="about-image h-full min-h-[320px] w-full rounded-lg object-cover" src="/assets/ai/gallery-gift.png" alt="Napechatay packaging" />
+              <img className="about-image h-full min-h-[320px] w-full rounded-lg object-cover" src="/assets/optimized/gallery-gift.webp" alt="Оформление заказа NAPECHATAY" loading="lazy" decoding="async" width="1600" height="1067" />
             </div>
             <div className="about-steps-grid grid gap-5 sm:grid-cols-3 lg:col-span-2">
               {[
@@ -351,9 +353,8 @@ function About() {
   );
 }
 
-function ServicesPrice() {
+function ServicesPrice({ services, onChooseService }) {
   const carouselRef = React.useRef(null);
-  const services = useServices();
 
   function scrollServices(direction) {
     const carousel = carouselRef.current;
@@ -396,7 +397,7 @@ function ServicesPrice() {
                 className="service-card group snap-start overflow-hidden rounded-lg bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lift"
               >
                 <div className="service-card-media relative overflow-hidden bg-milk">
-                  <img className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${title === "Детские футболки" ? "service-image-soft" : ""}`} src={src} alt={title} />
+                  <img className={`h-full w-full object-cover transition duration-700 group-hover:scale-105 ${title === "Детские футболки" ? "service-image-soft" : ""}`} src={displayAsset(src)} alt={title} loading="lazy" decoding="async" width="1200" height="900" />
                 </div>
                 <div className="service-card-body grid gap-4 p-5">
                   <div>
@@ -404,8 +405,8 @@ function ServicesPrice() {
                     <p className="mt-3 max-w-sm text-sm leading-6 text-ink/58">{text}</p>
                   </div>
                   <div className="flex items-center justify-between gap-4">
-                    <p className="w-fit rounded-full bg-milk px-5 py-3 text-sm font-black text-clay">{price}</p>
-                    <a className="service-card-cta" href="#contacts">Смотреть цены <span>→</span></a>
+                    <p className="service-card-price">{price}</p>
+                    <a className="service-card-cta" href="#contacts" aria-label={`Рассчитать стоимость: ${title}`} onClick={() => onChooseService(title)}>Рассчитать <span>→</span></a>
                   </div>
                 </div>
               </article>
@@ -420,24 +421,24 @@ function ServicesPrice() {
               <p className="mt-2 text-sm leading-7 text-ink/55">Размер принта подбирается под изделие и композицию. Финальную стоимость подтвердим после просмотра макета.</p>
             </div>
           </div>
-          <div className="price-grid -mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-3 lg:mx-0 lg:grid lg:grid-cols-4 lg:px-0">
+          <div className="price-grid price-matrix -mx-5 flex snap-x overflow-x-auto px-5 pb-3 lg:mx-0 lg:grid lg:grid-cols-4 lg:px-0">
             {priceRows.map(([size, format, standard, oversize]) => (
-              <article key={size} className="price-card min-w-[270px] snap-start rounded-lg bg-milk p-5 transition hover:-translate-y-1 hover:bg-[#eee5dc] sm:min-w-[300px] lg:min-w-0">
+              <article key={size} className="price-card min-w-[270px] snap-start p-5 sm:min-w-[300px] lg:min-w-0">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="display-title text-4xl font-bold">{size}</p>
                     <p className="mt-1 text-sm text-ink/52">{format}</p>
                   </div>
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-clay">DTF</span>
+                  <span className="price-method">DTF</span>
                 </div>
                 <div className="mt-6 grid gap-3">
-                  <div className="price-tier rounded-lg bg-white p-4">
+                  <div className="price-tier p-4">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/42">Стандарт</p>
                     <p className="mt-2 text-2xl font-black text-ink">{standard}</p>
                   </div>
-                  <div className="price-tier rounded-lg bg-clay p-4 text-white">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/58">Oversize</p>
-                    <p className="mt-2 text-2xl font-black">{oversize}</p>
+                  <div className="price-tier p-4">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/42">Oversize</p>
+                    <p className="mt-2 text-2xl font-black text-ink">{oversize}</p>
                   </div>
                 </div>
               </article>
@@ -453,97 +454,96 @@ function ServicesPrice() {
   );
 }
 
-function Gallery() {
-  const [showMore, setShowMore] = React.useState(false);
+function Gallery({ gallery }) {
   const [lightbox, setLightbox] = React.useState(null);
-  const { gallery } = useSiteContent();
+  const closeButtonRef = React.useRef(null);
+  const triggerRef = React.useRef(null);
   const managedImages = gallery.filter((item) => item.type !== "video").map((item) => [item.src, item.title]);
   const managedVideos = gallery.filter((item) => item.type === "video").map((item) => [item.src, item.title, item.poster, item.autoplay, item.muted]);
-  const photoItems = managedImages.length ? managedImages : galleryPhotos;
-  const videoItems = managedVideos.length ? managedVideos : galleryVideos;
-  const visibleExtraPhotos = showMore ? extraGalleryPhotos : [];
+  const customManagedImages = managedImages.filter(([src]) => !src.startsWith("/assets/ai/"));
+  const curatedManagedVideos = managedVideos.filter(([src]) => !src.includes("nike"));
+  const photoItems = [...customManagedImages, ...galleryPhotos].slice(0, 4);
+  const videoItems = [
+    ...curatedManagedVideos,
+    ...galleryVideos.filter(([src]) => !curatedManagedVideos.some(([managedSrc]) => managedSrc === src)),
+  ].slice(0, 3);
+
+  React.useEffect(() => {
+    if (!lightbox) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", handleEscape);
+    window.requestAnimationFrame(() => closeButtonRef.current?.focus());
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = previousOverflow;
+      triggerRef.current?.focus();
+    };
+  }, [lightbox]);
+
+  function openLightbox(item, event) {
+    triggerRef.current = event.currentTarget;
+    setLightbox(item);
+  }
+
+  function closeLightbox() {
+    setLightbox(null);
+  }
 
   return (
     <section id="gallery" className="gallery-section section-pad bg-paper">
       <div className="container-page">
-        <div className="gallery-heading">
+        <div className="gallery-heading gallery-heading-row">
           <SectionTitle eyebrow="Фотогалерея" />
+          <p>Визуальные направления для одежды, подарков и брендового мерча.</p>
         </div>
 
-        <div className="gallery-grid mt-12 grid auto-rows-[170px] grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-4 lg:grid-cols-6">
-          {photoItems.map(([src, alt], index) => {
-            const spans = [
-              "row-span-2",
-              "row-span-2 col-span-2",
-              "row-span-2 col-span-2",
-              "row-span-2",
-              "row-span-2 col-span-2",
-              "row-span-2 col-span-2",
-              "row-span-2 col-span-2",
-            ];
-            return (
-              <article key={src} className={`group relative overflow-hidden rounded-sm bg-ink ${spans[index]}`}>
-                <button className="h-full w-full text-left" type="button" onClick={() => setLightbox({ type: "image", src, title: alt })}>
-                  <img
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    style={alt === "Детский принт" ? { filter: "saturate(0.62) sepia(0.10) contrast(0.94) brightness(0.98)" } : undefined}
-                    src={src}
-                    alt={alt}
-                  />
-                </button>
-                {index === photoItems.length - 1 && (
-                  <button
-                    className="absolute inset-0 grid place-items-center bg-ink/62 text-sm font-black text-white transition hover:bg-ink/45"
-                    type="button"
-                    onClick={() => setShowMore((current) => !current)}
-                  >
-                    +10 фото
-                  </button>
-                )}
-              </article>
-            );
-          })}
+        <div className="gallery-grid proof-gallery">
+          {photoItems.slice(0, 6).map(([src, alt], index) => (
+            <article key={src} className={`proof-item proof-item-${index + 1}`}>
+              <button type="button" aria-label={`Открыть фото: ${alt}`} onClick={(event) => openLightbox({ type: "image", src, title: alt }, event)}>
+                <img src={displayAsset(src)} alt={alt} loading="lazy" decoding="async" width="900" height="1200" />
+                <span>{alt}</span>
+              </button>
+            </article>
+          ))}
         </div>
 
-        {visibleExtraPhotos.length > 0 && (
-          <div className="mt-5 grid gap-x-3 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-            {visibleExtraPhotos.map(([src, alt]) => (
-              <article key={src} className="overflow-hidden rounded-sm bg-ink">
-                <button className="h-full w-full text-left" type="button" onClick={() => setLightbox({ type: "image", src, title: alt })}>
-                  <img className="h-72 w-full object-cover transition duration-500 hover:scale-105" src={src} alt={alt} />
-                </button>
-              </article>
-            ))}
-          </div>
-        )}
-
-        <div className="gallery-video-section mt-16">
-          <SectionTitle eyebrow="Реальные заказы" />
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-ink/58">Примеры клиентских дизайнов, готовых принтов и реальных изделий в движении.</p>
+        <div className="gallery-video-section">
+          <SectionTitle eyebrow="Реальные работы" />
+          <p>Короткие фрагменты с готовыми изделиями и процессом подготовки.</p>
           <div className="gallery-video-grid mt-7 grid gap-4 md:grid-cols-3">
             {videoItems.map(([src, title, poster, autoplay, muted]) => (
               <article key={src} className="gallery-video-card overflow-hidden rounded-lg bg-ink text-white shadow-soft">
-                <button className="block w-full text-left" type="button" onClick={() => setLightbox({ type: "video", src, title })}>
-                  <video className="gallery-video aspect-[9/13] w-full object-cover" muted={muted !== false} autoPlay={autoplay === true} playsInline preload="metadata" poster={poster || undefined} src={src} />
+                <button className="gallery-video-trigger block w-full text-left" type="button" aria-label={`Открыть видео: ${title}`} onClick={(event) => openLightbox({ type: "video", src, title, poster }, event)}>
+                  <video className="gallery-video aspect-[9/13] w-full object-cover" muted={muted !== false} autoPlay={autoplay === true} playsInline preload={autoplay === true ? "metadata" : "none"} poster={poster || undefined} src={src} />
+                  <span className="gallery-play" aria-hidden="true"><Play size={18} fill="currentColor" /></span>
                 </button>
                 <div className="p-5">
-                  <h3 className="font-black">{title}</h3>
+                  <h3>{title}</h3>
                 </div>
               </article>
             ))}
           </div>
+          <div className="gallery-cta">
+            <p>Есть идея или референс?</p>
+            <a href="#contacts">Рассчитать мой принт <ArrowRight size={17} /></a>
+          </div>
         </div>
       </div>
       {lightbox && (
-        <div className="gallery-lightbox fixed inset-0 z-[80] grid place-items-center bg-ink/78 p-4" role="dialog" aria-modal="true">
-          <button className="gallery-lightbox-close absolute right-5 top-5 grid size-12 place-items-center rounded-full bg-ink text-white shadow-lift" type="button" onClick={() => setLightbox(null)} aria-label="Закрыть">
+        <div className="gallery-lightbox fixed inset-0 z-[80] grid place-items-center bg-ink/78 p-4" role="dialog" aria-modal="true" aria-label={lightbox.title} onMouseDown={(event) => { if (event.target === event.currentTarget) closeLightbox(); }}>
+          <button ref={closeButtonRef} className="gallery-lightbox-close absolute right-5 top-5 grid size-12 place-items-center rounded-full bg-ink text-white shadow-lift" type="button" onClick={closeLightbox} aria-label="Закрыть">
             <X size={22} />
           </button>
           <div className="w-full max-w-5xl">
             {lightbox.type === "image" ? (
-              <img className="max-h-[82vh] w-full rounded-lg object-contain shadow-soft" src={lightbox.src} alt={lightbox.title} />
+              <img className="max-h-[82vh] w-full rounded-lg object-contain shadow-soft" src={displayAsset(lightbox.src)} alt={lightbox.title} decoding="async" />
             ) : (
-              <video className="mx-auto max-h-[82vh] rounded-lg shadow-soft" src={lightbox.src} controls autoPlay playsInline />
+              <video className="mx-auto max-h-[82vh] rounded-lg shadow-soft" src={lightbox.src} poster={lightbox.poster} controls autoPlay playsInline />
             )}
             <p className="gallery-lightbox-caption mt-3 text-center text-base font-semibold text-white/90">{lightbox.title}</p>
           </div>
@@ -587,63 +587,31 @@ function OrderSteps() {
 
 function Reviews() {
   return (
-    <section id="reviews" className="section-pad overflow-hidden bg-[#f3eee7]">
+    <section id="reviews" className="reviews-section section-pad overflow-hidden bg-[#f3eee7]">
       <div className="container-page">
-        <div className="reviews-shell relative rounded-lg bg-white p-6 shadow-soft sm:p-10 lg:p-14">
+        <div className="reviews-heading-row">
           <SectionTitle eyebrow="Отзывы" />
-          <div className="reviews-main mt-9 grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
-            <div className="relative">
-              <p className="review-quote display-title text-ink">
-                «{reviews[0].text}»
-              </p>
-              <div className="review-author mt-8 flex items-center gap-4">
-                <div className="grid size-12 place-items-center rounded-full bg-[#f3eee7] text-sm font-black text-clay">
-                  {reviews[0].name.slice(0, 1)}
-                </div>
-                <div>
-                  <p className="font-black">{reviews[0].name}</p>
-                  <p className="text-sm text-ink/55">{reviews[0].role}</p>
-                </div>
-              </div>
-            </div>
-            <div className="review-photo-card rounded-lg bg-[#f3eee7] p-3">
-              <img className="h-[360px] w-full rounded-lg object-cover" src="/assets/ai/ai-photo.png" alt="Отзыв клиента" />
-              <div className="mt-4 flex items-center justify-between gap-4 px-1">
-                <div className="flex gap-1 text-yellow-400">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star key={index} size={17} fill="currentColor" />
-                  ))}
-                </div>
-                <span className="text-sm font-semibold text-ink/62">5.0 рейтинг</span>
-              </div>
-            </div>
-          </div>
-          <div className="reviews-secondary mt-7 grid gap-4 md:grid-cols-2">
-            {reviews.slice(1).map((review) => (
-              <article key={review.name} className="review-mini-card rounded-lg p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-black">{review.name}</p>
-                    <p className="mt-1 text-xs font-semibold text-clay/75">{review.role}</p>
-                  </div>
-                  <div className="flex gap-0.5 text-yellow-400">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} size={14} fill="currentColor" />
-                    ))}
-                  </div>
-                </div>
-                <p className="mt-4 text-sm leading-7 text-ink/68">{review.text}</p>
-              </article>
-            ))}
-          </div>
+          <p>Живые отметки клиентов после получения заказов.</p>
         </div>
+        <div className="review-proof-grid">
+          {reviewProof.map(([src, alt, source], index) => (
+            <figure key={src} className={`review-proof-card review-proof-card-${index + 1}`}>
+              <div className="review-proof-media">
+                <img src={src} alt={alt} loading="lazy" decoding="async" />
+              </div>
+              <figcaption>
+                <span>{index === 2 ? "Сообщение клиента" : "Отметка клиента"}</span>
+                <strong>{source}</strong>
+              </figcaption>
+            </figure>
+          ))}
+          </div>
       </div>
     </section>
   );
 }
 
-function FAQ() {
-  const { faq: managedFaq } = useSiteContent();
+function FAQ({ managedFaq }) {
   const faqItems = managedFaq.length ? managedFaq.map((item) => [item.question, item.answer]) : faq;
   return (
     <section id="faq" className="faq-section bg-paper">
@@ -656,26 +624,9 @@ function FAQ() {
               Перед заказом хочется понимать детали.
             </h2>
             <p className="mt-6 max-w-md text-sm leading-7 text-white/62">
-              Собрали короткие ответы на вопросы о макете, стоимости и оформлении заказа. Если нужен быстрый расчет, форма ниже отправит заявку сразу в Telegram.
+              Собрали короткие ответы на вопросы о макете, стоимости и оформлении заказа.
             </p>
-            <div className="faq-stats mt-10 grid grid-cols-2 gap-3">
-              <div className="rounded-lg bg-white/8 p-4">
-                <p className="text-2xl font-bold">1+</p>
-                <p className="mt-1 text-xs text-white/52">изделие</p>
-              </div>
-              <div className="rounded-lg bg-white/8 p-4">
-                <p className="text-2xl font-bold">A6-A3</p>
-                <p className="mt-1 text-xs text-white/52">форматы</p>
-              </div>
-              <div className="rounded-lg bg-white/8 p-4">
-                <p className="text-2xl font-bold">3-5</p>
-                <p className="mt-1 text-xs text-white/52">дней в среднем</p>
-              </div>
-              <div className="rounded-lg bg-white/8 p-4">
-                <p className="text-2xl font-bold">WhatsApp</p>
-                <p className="mt-1 text-xs text-white/52">быстрый ответ</p>
-              </div>
-            </div>
+            <p className="faq-meta-line">От 1 изделия <span /> Форматы A6–A3</p>
           </div>
           <div className="faq-list flex flex-col justify-center gap-3 p-5 sm:p-8">
             {faqItems.map(([question, answer], index) => (
@@ -698,8 +649,7 @@ function FAQ() {
   );
 }
 
-function Contacts() {
-  const services = useServices();
+function Contacts({ services, selectedService }) {
   const [form, setForm] = React.useState({
     name: "",
     phone: "",
@@ -710,6 +660,10 @@ function Contacts() {
   });
   const [status, setStatus] = React.useState("idle");
   const [notice, setNotice] = React.useState("");
+
+  React.useEffect(() => {
+    if (selectedService) setForm((current) => ({ ...current, service: selectedService }));
+  }, [selectedService]);
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -751,7 +705,7 @@ function Contacts() {
             <SectionTitle eyebrow="Контакты" />
             <h2 className="contacts-title display-title mt-9 max-w-xl text-ink">Готовы сделать свою одежду уникальной?</h2>
             <p className="mt-5 max-w-xl text-base leading-8 text-ink/64">
-              Оставьте заявку, и мы получим ее в Telegram. Укажите изделие, количество, размер принта и детали заказа.
+              Расскажите об изделии, количестве, размере принта и деталях заказа. Мы уточним стоимость и подходящий формат.
             </p>
             <div className="relative mt-8 grid gap-3">
               {[
@@ -773,7 +727,7 @@ function Contacts() {
           <form className="contact-form-panel p-6 text-white sm:p-9 lg:p-11" onSubmit={submitLead}>
             <div className="mb-8">
               <p className="display-title text-4xl font-bold text-white sm:text-5xl">Заявка на печать</p>
-              <p className="mt-3 text-sm leading-7 text-white/58">Оставьте контакты, и менеджер получит заявку сразу в Telegram.</p>
+              <p className="mt-3 text-sm leading-7 text-white/58">Оставьте контакты и коротко опишите задачу.</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-semibold">
@@ -808,7 +762,7 @@ function Contacts() {
                 {status === "loading" ? "Отправляем..." : "Отправить заявку"}
                 <ArrowRight size={18} />
               </button>
-              {notice && <p className={`rounded-lg px-4 py-3 text-sm sm:col-span-2 ${status === "success" ? "bg-sage/20 text-white" : "bg-red-500/15 text-red-100"}`}>{notice}</p>}
+              {notice && <p aria-live="polite" className={`rounded-lg px-4 py-3 text-sm sm:col-span-2 ${status === "success" ? "bg-sage/20 text-white" : "bg-red-500/15 text-red-100"}`}>{notice}</p>}
             </div>
           </form>
         </div>
@@ -1424,23 +1378,31 @@ export default function App() {
   if (route === "/auth") return <AuthPage />;
   if (route === "/admin") return <AdminPage />;
 
+  return <PublicSite />;
+}
+
+function PublicSite() {
+  const { hero, faq: managedFaq, gallery } = useSiteContent();
+  const services = useServices();
+  const [selectedService, setSelectedService] = React.useState("");
+
   return (
     <>
       <Header />
       <main>
-        <Hero />
+        <Hero hero={hero} />
         <About />
-        <ServicesPrice />
-        <Gallery />
+        <ServicesPrice services={services} onChooseService={setSelectedService} />
+        <Gallery gallery={gallery} />
         <OrderSteps />
         <Reviews />
-        <FAQ />
-        <Contacts />
+        <FAQ managedFaq={managedFaq} />
+        <Contacts services={services} selectedService={selectedService} />
       </main>
       <footer className="site-footer bg-paper">
         <div className="footer-inner container-page flex flex-col gap-6 text-sm text-ink/58 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="footer-brand brand-script text-4xl text-ink">Napechatay</p>
+            <p className="footer-brand">NAPECHATAY</p>
             <p className="mt-2 text-base text-ink/70">Печать, которую хочется носить.</p>
           </div>
           <div className="md:text-right">
