@@ -356,8 +356,15 @@ function ServicesPrice() {
   const services = useServices();
 
   function scrollServices(direction) {
-    carouselRef.current?.scrollBy({
-      left: direction * 420,
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const firstCard = carousel.querySelector(".service-card");
+    const gap = Number.parseFloat(window.getComputedStyle(carousel).columnGap) || 0;
+    const step = (firstCard?.getBoundingClientRect().width || 420) + gap;
+
+    carousel.scrollBy({
+      left: direction * step,
       behavior: "smooth",
     });
   }
