@@ -162,11 +162,11 @@ const faq = [
 
 function SectionTitle({ eyebrow, title, dark = false }) {
   return (
-    <div className="flex items-center gap-5">
+    <div className="section-title-row flex items-center gap-5">
       <h2 className={`section-heading display-title uppercase leading-none ${dark ? "text-white" : "text-ink"}`}>
         {eyebrow || title}
       </h2>
-      <span className={`h-px flex-1 ${dark ? "bg-white/25" : "bg-ink/25"}`} />
+      <span className={`section-title-rule h-px flex-1 ${dark ? "bg-white/25" : "bg-ink/25"}`} />
     </div>
   );
 }
@@ -226,12 +226,12 @@ function Header() {
           Napechatay
         </a>
 
-        <nav className="hidden items-center gap-2 xl:flex" aria-label="Навигация">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Навигация">
           {navItems.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="site-header-nav-link body-modern rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-[0.16em]"
+              className="site-header-nav-link body-modern rounded-full px-3 py-2 text-sm font-semibold uppercase"
             >
               {label}
             </a>
@@ -271,8 +271,11 @@ function Hero() {
             {hero.subtitle || fallbackHero.subtitle}
           </p>
         </div>
-        <div className="hero-cta-wrap mt-9 flex justify-start">
-          <a className="hero-cta" href={hero.ctaLink || fallbackHero.ctaLink}>
+        <div className="hero-cta-wrap hero-actions mt-9 flex justify-start">
+          <a className="hero-cta hero-cta-primary" href="#contacts">
+            Заказать печать <ArrowRight size={18} />
+          </a>
+          <a className="hero-cta hero-cta-secondary" href={hero.ctaLink || fallbackHero.ctaLink}>
             {hero.ctaText || fallbackHero.ctaText} <ArrowRight size={18} />
           </a>
         </div>
@@ -285,8 +288,8 @@ function About() {
   return (
     <section id="about" className="section-pad bg-paper">
       <div className="container-page">
-        <div className="grid gap-9 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-          <div>
+        <div className="about-layout grid gap-9 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+          <div className="about-copy">
             <SectionTitle eyebrow="О нас" />
             <h2 className="about-main-title display-title mt-9 text-ink">
               Печать начинается не со станка, а со вкуса.
@@ -360,8 +363,8 @@ function ServicesPrice() {
   return (
     <section id="services" className="section-pad overflow-hidden bg-[#f2f2f0]">
       <div className="container-page">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
+        <div className="services-header flex flex-col gap-6 lg:flex-row lg:items-end">
+          <div className="services-intro max-w-3xl">
             <SectionTitle eyebrow="Услуги и прайс" />
             <p className="mt-6 text-base leading-8 text-ink/62">
               Витрина популярных форматов: от одной футболки до небольшого мерча для команды. Листайте карточки и выбирайте основу, а точную стоимость рассчитаем по макету и тиражу.
@@ -401,8 +404,8 @@ function ServicesPrice() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-lg border border-ink/8 bg-white p-5 shadow-soft lg:p-7">
-          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div className="price-panel mt-8 rounded-lg border border-ink/8 bg-white p-5 shadow-soft lg:p-7">
+          <div className="price-panel-heading mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h3 className="display-title text-4xl font-bold text-ink">Базовый расчет</h3>
               <p className="mt-2 text-sm leading-7 text-ink/55">Размер принта подбирается под изделие и композицию. Финальную стоимость подтвердим после просмотра макета.</p>
@@ -410,7 +413,7 @@ function ServicesPrice() {
           </div>
           <div className="price-grid -mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-3 lg:mx-0 lg:grid lg:grid-cols-4 lg:px-0">
             {priceRows.map(([size, format, standard, oversize]) => (
-              <article key={size} className="min-w-[270px] snap-start rounded-lg bg-milk p-5 transition hover:-translate-y-1 hover:bg-[#eee5dc] sm:min-w-[300px] lg:min-w-0">
+              <article key={size} className="price-card min-w-[270px] snap-start rounded-lg bg-milk p-5 transition hover:-translate-y-1 hover:bg-[#eee5dc] sm:min-w-[300px] lg:min-w-0">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="display-title text-4xl font-bold">{size}</p>
@@ -419,11 +422,11 @@ function ServicesPrice() {
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-clay">DTF</span>
                 </div>
                 <div className="mt-6 grid gap-3">
-                  <div className="rounded-lg bg-white p-4">
+                  <div className="price-tier rounded-lg bg-white p-4">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/42">Стандарт</p>
                     <p className="mt-2 text-2xl font-black text-ink">{standard}</p>
                   </div>
-                  <div className="rounded-lg bg-clay p-4 text-white">
+                  <div className="price-tier rounded-lg bg-clay p-4 text-white">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/58">Oversize</p>
                     <p className="mt-2 text-2xl font-black">{oversize}</p>
                   </div>
@@ -431,7 +434,7 @@ function ServicesPrice() {
               </article>
             ))}
           </div>
-          <p className="mt-5 rounded-lg bg-paper px-5 py-4 text-sm leading-7 text-ink/58">
+          <p className="price-note mt-5 rounded-lg bg-paper px-5 py-4 text-sm leading-7 text-ink/58">
             Финальная стоимость зависит от изделия, цвета и подготовки макета.
           </p>
         </div>
@@ -458,7 +461,7 @@ function Gallery() {
           <SectionTitle eyebrow="Фотогалерея" />
         </div>
 
-        <div className="mt-12 grid auto-rows-[170px] grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-4 lg:grid-cols-6">
+        <div className="gallery-grid mt-12 grid auto-rows-[170px] grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-4 lg:grid-cols-6">
           {photoItems.map(([src, alt], index) => {
             const spans = [
               "row-span-2",
@@ -505,14 +508,14 @@ function Gallery() {
           </div>
         )}
 
-        <div className="mt-16">
+        <div className="gallery-video-section mt-16">
           <SectionTitle eyebrow="Реальные заказы" />
           <p className="mt-5 max-w-2xl text-sm leading-7 text-ink/58">Примеры клиентских дизайнов, готовых принтов и реальных изделий в движении.</p>
-          <div className="mt-7 grid gap-4 md:grid-cols-3">
+          <div className="gallery-video-grid mt-7 grid gap-4 md:grid-cols-3">
             {videoItems.map(([src, title, poster, autoplay, muted]) => (
-              <article key={src} className="overflow-hidden rounded-lg bg-ink text-white shadow-soft">
+              <article key={src} className="gallery-video-card overflow-hidden rounded-lg bg-ink text-white shadow-soft">
                 <button className="block w-full text-left" type="button" onClick={() => setLightbox({ type: "video", src, title })}>
-                  <video className="aspect-[9/13] w-full object-cover" muted={muted !== false} autoPlay={autoplay === true} playsInline preload="metadata" poster={poster || undefined} src={src} />
+                  <video className="gallery-video aspect-[9/13] w-full object-cover" muted={muted !== false} autoPlay={autoplay === true} playsInline preload="metadata" poster={poster || undefined} src={src} />
                 </button>
                 <div className="p-5">
                   <h3 className="font-black">{title}</h3>
@@ -545,8 +548,8 @@ function OrderSteps() {
   return (
     <section className="order-section bg-white">
       <div className="container-page">
-        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
-          <div>
+        <div className="order-layout grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+          <div className="order-copy">
             <SectionTitle eyebrow="Как заказать" />
             <h2 className="order-title display-title mt-8 text-ink">
               <span>От идеи</span>
@@ -579,12 +582,12 @@ function Reviews() {
       <div className="container-page">
         <div className="reviews-shell relative rounded-lg bg-white p-6 shadow-soft sm:p-10 lg:p-14">
           <SectionTitle eyebrow="Отзывы" />
-          <div className="mt-9 grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
+          <div className="reviews-main mt-9 grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
             <div className="relative">
               <p className="review-quote display-title text-ink">
                 «{reviews[0].text}»
               </p>
-              <div className="mt-8 flex items-center gap-4">
+              <div className="review-author mt-8 flex items-center gap-4">
                 <div className="grid size-12 place-items-center rounded-full bg-[#f3eee7] text-sm font-black text-clay">
                   {reviews[0].name.slice(0, 1)}
                 </div>
@@ -606,7 +609,7 @@ function Reviews() {
               </div>
             </div>
           </div>
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
+          <div className="reviews-secondary mt-7 grid gap-4 md:grid-cols-2">
             {reviews.slice(1).map((review) => (
               <article key={review.name} className="review-mini-card rounded-lg p-5">
                 <div className="flex items-start justify-between gap-4">
@@ -636,8 +639,8 @@ function FAQ() {
   return (
     <section id="faq" className="faq-section bg-paper">
       <div className="container-page">
-        <div className="grid overflow-hidden rounded-lg border border-ink/8 bg-white shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative bg-ink p-8 text-white sm:p-12">
+        <div className="faq-shell grid overflow-hidden rounded-lg border border-ink/8 bg-white shadow-soft lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="faq-copy-panel relative bg-ink p-8 text-white sm:p-12">
             <div className="faq-corner absolute right-0 top-0 rounded-bl-[70px] bg-clay" />
             <SectionTitle eyebrow="FAQ" dark />
             <h2 className="faq-title display-title mt-10 text-4xl font-bold leading-[1.18] sm:text-5xl">
@@ -646,7 +649,7 @@ function FAQ() {
             <p className="mt-6 max-w-md text-sm leading-7 text-white/62">
               Собрали короткие ответы на вопросы о макете, стоимости и оформлении заказа. Если нужен быстрый расчет, форма ниже отправит заявку сразу в Telegram.
             </p>
-            <div className="mt-10 grid grid-cols-2 gap-3">
+            <div className="faq-stats mt-10 grid grid-cols-2 gap-3">
               <div className="rounded-lg bg-white/8 p-4">
                 <p className="text-2xl font-bold">1+</p>
                 <p className="mt-1 text-xs text-white/52">изделие</p>
@@ -733,20 +736,15 @@ function Contacts() {
   return (
     <section id="contacts" className="section-pad bg-white">
       <div className="container-page">
-        <div className="grid overflow-hidden rounded-lg border border-ink/8 bg-milk shadow-soft lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative overflow-hidden p-6 sm:p-10 lg:p-14">
-            <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-clay/15" />
+        <div className="contacts-shell grid overflow-hidden rounded-lg border border-ink/8 bg-milk shadow-soft lg:grid-cols-[0.86fr_1.14fr]">
+          <div className="contacts-copy-panel relative overflow-hidden p-6 sm:p-10 lg:p-12">
+            <div className="contacts-decoration absolute -right-20 bottom-0 h-52 w-52 rounded-full bg-clay/15" />
             <SectionTitle eyebrow="Контакты" />
             <h2 className="contacts-title display-title mt-9 max-w-xl text-ink">Готовы сделать свою одежду уникальной?</h2>
             <p className="mt-5 max-w-xl text-base leading-8 text-ink/64">
               Оставьте заявку, и мы получим ее в Telegram. Укажите изделие, количество, размер принта и детали заказа.
             </p>
-            <div className="contacts-response relative mt-7 rounded-lg bg-white/70 p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-clay">Средний ответ</p>
-              <p className="mt-2 text-2xl font-black text-ink">5-10 минут</p>
-              <p className="mt-1 text-sm text-ink/58">в WhatsApp или Telegram</p>
-            </div>
-            <div className="relative mt-10 grid gap-3">
+            <div className="relative mt-8 grid gap-3">
               {[
                 "Ответим по стоимости и срокам",
                 "Подскажем формат A6, A5, A4 или A3",
@@ -763,7 +761,7 @@ function Contacts() {
               <a className="btn-secondary btn-instagram bg-white" href={instagramUrl} target="_blank" rel="noreferrer">Instagram <InstagramMark className="size-5" /></a>
             </div>
           </div>
-          <form className="contact-form-panel p-6 text-white sm:p-10 lg:p-14" onSubmit={submitLead}>
+          <form className="contact-form-panel p-6 text-white sm:p-9 lg:p-11" onSubmit={submitLead}>
             <div className="mb-8">
               <p className="display-title text-4xl font-bold text-white sm:text-5xl">Заявка на печать</p>
               <p className="mt-3 text-sm leading-7 text-white/58">Оставьте контакты, и менеджер получит заявку сразу в Telegram.</p>
@@ -1431,7 +1429,7 @@ export default function App() {
         <Contacts />
       </main>
       <footer className="site-footer bg-paper">
-        <div className="container-page flex flex-col gap-6 text-sm text-ink/58 md:flex-row md:items-center md:justify-between">
+        <div className="footer-inner container-page flex flex-col gap-6 text-sm text-ink/58 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="footer-brand brand-script text-4xl text-ink">Napechatay</p>
             <p className="mt-2 text-base text-ink/70">Печать, которую хочется носить.</p>
