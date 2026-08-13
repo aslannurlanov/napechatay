@@ -1048,11 +1048,20 @@
     @apply rounded-lg border border-white/70 bg-white/75 shadow-soft backdrop-blur-xl;
   }
 
+  .site-header,
+  .hero-section {
+    --hero-espresso: #1c1511;
+    --hero-ivory: #f5f0e8;
+    --hero-terracotta: #c66f4e;
+    --hero-terracotta-hover: #d17f60;
+    --hero-bronze: #b49468;
+    --hero-warm-black: #181411;
+  }
+
   .site-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(24, 18, 15, 0.88);
-    color: #fff;
-    backdrop-filter: blur(14px) saturate(115%);
+    border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+    background: var(--hero-espresso);
+    color: var(--hero-ivory);
     transition: background-color 260ms ease, color 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
   }
 
@@ -1061,33 +1070,33 @@
   }
 
   .site-header:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(24, 18, 15, 0.94);
-    color: #fff;
-    box-shadow: 0 12px 34px rgba(12, 9, 7, 0.14);
+    border-color: rgba(245, 240, 232, 0.12);
+    background: var(--hero-espresso);
+    color: var(--hero-ivory);
+    box-shadow: 0 8px 24px rgba(12, 9, 7, 0.1);
   }
 
   .site-header-brand {
     display: inline-flex;
     min-height: 44px;
     align-items: center;
-    color: #fff;
+    color: var(--hero-ivory);
     font-weight: 600;
     letter-spacing: 0.015em;
     transition: color 260ms ease;
   }
 
   .site-header:hover .site-header-brand {
-    color: #fff;
+    color: var(--hero-ivory);
   }
 
   .site-header-brand:hover {
-    color: #6f5147;
+    color: var(--hero-bronze);
   }
 
   .site-header-nav-link {
     position: relative;
-    color: rgba(255, 255, 255, 0.84);
+    color: rgba(245, 240, 232, 0.82);
     font-weight: 500;
     letter-spacing: 0.075em;
     transition: background-color 220ms ease, color 220ms ease;
@@ -1108,16 +1117,16 @@
   }
 
   .site-header:hover .site-header-nav-link {
-    color: rgba(255, 255, 255, 0.84);
+    color: rgba(245, 240, 232, 0.82);
   }
 
   .site-header-nav-link:hover {
     background: transparent;
-    color: #fff !important;
+    color: var(--hero-ivory) !important;
   }
 
   .site-header:hover .site-header-nav-link:hover {
-    color: #fff !important;
+    color: var(--hero-ivory) !important;
   }
 
   .site-header-nav-link:hover::after {
@@ -1127,26 +1136,29 @@
   .site-header-order {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg text-sm font-semibold;
     border: 1px solid transparent;
-    background: #c98975;
-    color: #fff;
+    background: var(--hero-terracotta);
+    color: var(--hero-ivory);
     transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
   }
 
   .site-header:hover .site-header-order {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: #c98975;
-    color: #fff;
+    border-color: rgba(245, 240, 232, 0.12);
+    background: var(--hero-terracotta);
+    color: var(--hero-ivory);
   }
 
   .site-header-order:hover {
     transform: translateY(-2px);
-    background: #181615 !important;
-    color: #fff !important;
+    background: var(--hero-terracotta-hover) !important;
+    color: var(--hero-ivory) !important;
   }
 
   .hero-bg-image {
-    object-position: 55% center;
+    top: var(--hero-header-height);
+    height: calc(100% - var(--hero-header-height));
+    object-position: 74% top;
     transform-origin: center;
+    filter: contrast(1.02) saturate(0.96) brightness(0.99);
   }
 
   .hero-bg-animate {
@@ -1156,9 +1168,9 @@
   .hero-depth-overlay {
     background: linear-gradient(
       180deg,
-      rgba(12, 11, 10, 0.18) 0%,
-      rgba(12, 11, 10, 0.025) 44%,
-      rgba(12, 11, 10, 0.16) 100%
+      rgba(28, 21, 17, 0.04) 0%,
+      rgba(28, 21, 17, 0) 52%,
+      rgba(28, 21, 17, 0.1) 100%
     );
   }
 
@@ -1175,10 +1187,12 @@
   .hero-title {
     font-family: "Cormorant Garamond", Georgia, serif;
     max-width: 760px;
-    font-size: clamp(62px, 6vw, 104px);
+    color: var(--hero-ivory);
+    font-size: clamp(62px, 5.4vw, 94px);
     font-weight: 500;
-    line-height: 0.88;
-    letter-spacing: -0.045em;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    text-shadow: 0 2px 18px rgba(24, 20, 17, 0.28);
   }
 
   .hero-title span {
@@ -1186,24 +1200,25 @@
   }
 
   .hero-title-last {
-    margin-top: 0.1em;
-    font-size: 0.94em;
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.035em;
+    margin-top: 0.08em;
+    color: var(--hero-accent);
+    font: inherit;
+    letter-spacing: inherit;
+    text-wrap: balance;
   }
 
   .hero-subtitle {
     max-width: 560px;
+    color: rgba(245, 240, 232, 0.88);
     font-size: clamp(19px, 1.35vw, 24px);
     font-weight: 400;
     line-height: 1.45;
-    opacity: 0.82;
     letter-spacing: -0.01em;
+    text-shadow: 0 2px 14px rgba(24, 20, 17, 0.3);
   }
 
   .hero-stage {
-    min-height: clamp(620px, 86svh, 840px) !important;
+    min-height: 100svh !important;
     z-index: 2;
     flex-direction: column;
     align-items: flex-start !important;
@@ -1215,7 +1230,10 @@
   }
 
   .hero-section {
-    min-height: clamp(620px, 86svh, 840px) !important;
+    --hero-header-height: 64px;
+    --hero-accent: #cc8062;
+    min-height: 100svh !important;
+    background: var(--hero-espresso);
   }
 
   .hero-section::after {
@@ -1225,8 +1243,8 @@
     right: 0;
     bottom: 0;
     left: 0;
-    height: 48px;
-    background: linear-gradient(180deg, rgba(255, 253, 249, 0), rgba(255, 253, 249, 0.22));
+    height: 32px;
+    background: linear-gradient(180deg, rgba(255, 253, 249, 0), rgba(255, 253, 249, 0.12));
     pointer-events: none;
   }
 
@@ -1249,32 +1267,31 @@
     gap: 0.5rem;
     border-radius: 999px;
     border: 1px solid transparent;
-    background: #b86f50;
+    background: var(--hero-terracotta);
     padding: 18px 34px;
-    color: #fff;
+    color: var(--hero-ivory);
     font-size: 0.875rem;
     font-weight: 500;
-    box-shadow: 0 16px 38px rgba(44, 32, 25, 0.12);
-    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 22px rgba(24, 20, 17, 0.16);
     transition: transform 220ms ease, background-color 220ms ease, border-color 220ms ease;
   }
 
   .hero-cta:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.14);
-    background: #9f5e44;
+    border-color: rgba(245, 240, 232, 0.16);
+    background: #d17f60;
   }
 
   .hero-cta-secondary {
-    border-color: rgba(255, 255, 255, 0.38);
-    background: rgba(20, 16, 13, 0.18);
-    color: #f5efe8;
+    border-color: rgba(245, 240, 232, 0.42);
+    background: transparent;
+    color: var(--hero-ivory);
     box-shadow: none;
   }
 
   .hero-cta-secondary:hover {
-    border-color: rgba(255, 255, 255, 0.58);
-    background: rgba(20, 16, 13, 0.34);
+    border-color: rgba(245, 240, 232, 0.66);
+    background: rgba(245, 240, 232, 0.08);
   }
 
   .section-title-row {
@@ -2122,7 +2139,7 @@
 
     .hero-section,
     .hero-stage {
-      min-height: clamp(580px, 82svh, 720px) !important;
+      min-height: 100svh !important;
     }
 
     .hero-stage {
@@ -2316,8 +2333,8 @@
 
     .hero-stage {
       flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-end;
+      align-items: stretch !important;
+      justify-content: flex-end !important;
       padding-top: 7rem;
       padding-right: 1.25rem;
       padding-bottom: 3.25rem;
@@ -2330,8 +2347,12 @@
     }
 
     .hero-title {
-      font-size: clamp(48px, 15vw, 68px);
+      font-size: clamp(44px, 12vw, 52px);
       line-height: 0.92;
+    }
+
+    .hero-title-last {
+      white-space: nowrap;
     }
 
     .hero-subtitle {
@@ -2346,7 +2367,7 @@
     }
 
     .hero-bg-image {
-      object-position: 86% center;
+      object-position: 86% top;
     }
 
     .section-heading {
@@ -2414,12 +2435,12 @@
 
   @media (min-width: 641px) and (max-width: 1023px) {
     .hero-bg-image {
-      object-position: 72% center;
+      object-position: 78% top;
     }
 
     .hero-section,
     .hero-stage {
-      min-height: clamp(620px, 86svh, 760px) !important;
+      min-height: 100svh !important;
     }
 
     .hero-stage {
@@ -2429,6 +2450,12 @@
     .service-card {
       min-width: 46vw;
       flex-basis: 46vw;
+    }
+  }
+
+  @media (min-width: 1024px) and (max-aspect-ratio: 17 / 10) {
+    .hero-bg-image {
+      object-position: 80% top;
     }
   }
 

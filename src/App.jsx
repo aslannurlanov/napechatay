@@ -220,7 +220,7 @@ function Header() {
   }, []);
 
   return (
-    <header className="site-header fixed left-0 right-0 top-0 z-50 backdrop-blur-xl">
+    <header className="site-header fixed left-0 right-0 top-0 z-50">
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <a href="#top" className="site-header-brand brand-script text-3xl sm:text-4xl" aria-label="Napechatay">
           Napechatay
@@ -255,19 +255,21 @@ function Header() {
 function Hero() {
   const { hero } = useSiteContent();
   const overlayOpacity = Math.max(0, Math.min(80, Number(hero.overlayOpacity ?? 35))) / 100;
+  const overlayLeft = Math.min(0.62, overlayOpacity + 0.18);
+  const overlayMiddle = Math.max(0.16, overlayOpacity * 0.62);
   return (
     <section id="top" className="hero-section relative overflow-hidden bg-ink text-white">
-      <img className="hero-bg-image hero-bg-animate absolute inset-0 h-full w-full object-cover" src={hero.image || fallbackHero.image} alt="Одежда с DTF-принтом в живой lifestyle-съемке" />
-      <div className="hero-contrast-overlay absolute inset-0" style={{ background: `linear-gradient(to right, rgba(0,0,0,${overlayOpacity}), rgba(0,0,0,${Math.max(0.08, overlayOpacity / 2)}))` }} />
+      <img className="hero-bg-image hero-bg-animate absolute left-0 w-full object-cover" src={hero.image || fallbackHero.image} alt="Одежда с DTF-принтом в живой lifestyle-съемке" />
+      <div className="hero-contrast-overlay absolute inset-0" style={{ background: `linear-gradient(90deg, rgba(28,21,17,${overlayLeft}) 0%, rgba(28,21,17,${overlayMiddle}) 46%, rgba(28,21,17,0.05) 78%, rgba(28,21,17,0.02) 100%)` }} />
       <div className="hero-depth-overlay absolute inset-0" />
       <div className="hero-stage container-page relative flex items-center justify-start">
         <div className="hero-copy-panel w-full max-w-3xl text-left">
-          <h1 className="hero-title max-w-3xl text-white drop-shadow-[0_8px_34px_rgba(0,0,0,0.46)]">
+          <h1 className="hero-title max-w-3xl">
             <span>{hero.titleLine1 || fallbackHero.titleLine1}</span>
             <span>{hero.titleLine2 || fallbackHero.titleLine2}</span>
             <span className="hero-title-last">{hero.titleLine3 || fallbackHero.titleLine3}</span>
           </h1>
-          <p className="hero-subtitle mt-7 max-w-2xl text-base leading-8 text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.65)] sm:text-xl">
+          <p className="hero-subtitle mt-7 max-w-2xl text-base leading-8 sm:text-xl">
             {hero.subtitle || fallbackHero.subtitle}
           </p>
         </div>
