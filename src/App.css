@@ -1145,13 +1145,21 @@
   }
 
   .hero-bg-image {
-    object-position: 60% center;
-    transform: scale(1.04);
+    object-position: 55% center;
     transform-origin: center;
   }
 
   .hero-bg-animate {
-    animation: hero-photo-in 900ms ease-out both, hero-bg-slow-zoom 8s ease 900ms forwards;
+    animation: hero-photo-in 900ms ease-out both;
+  }
+
+  .hero-depth-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(12, 11, 10, 0.18) 0%,
+      rgba(12, 11, 10, 0.025) 44%,
+      rgba(12, 11, 10, 0.16) 100%
+    );
   }
 
   .hero-copy-panel {
@@ -1196,6 +1204,7 @@
 
   .hero-stage {
     min-height: clamp(620px, 86svh, 840px) !important;
+    z-index: 2;
     flex-direction: column;
     align-items: flex-start !important;
     justify-content: center !important;
@@ -1207,6 +1216,18 @@
 
   .hero-section {
     min-height: clamp(620px, 86svh, 840px) !important;
+  }
+
+  .hero-section::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 48px;
+    background: linear-gradient(180deg, rgba(255, 253, 249, 0), rgba(255, 253, 249, 0.22));
+    pointer-events: none;
   }
 
   .hero-cta-wrap {
@@ -2244,15 +2265,6 @@
     }
   }
 
-  @keyframes hero-bg-slow-zoom {
-    from {
-      transform: scale(1.04);
-    }
-    to {
-      transform: scale(1.075);
-    }
-  }
-
   @keyframes hero-copy-in {
     from {
       opacity: 0;
@@ -2334,7 +2346,7 @@
     }
 
     .hero-bg-image {
-      object-position: 68% center;
+      object-position: 86% center;
     }
 
     .section-heading {
@@ -2401,8 +2413,16 @@
   }
 
   @media (min-width: 641px) and (max-width: 1023px) {
+    .hero-bg-image {
+      object-position: 72% center;
+    }
+
+    .hero-section,
     .hero-stage {
-      min-height: 760px;
+      min-height: clamp(620px, 86svh, 760px) !important;
+    }
+
+    .hero-stage {
       padding-top: 6rem;
     }
 

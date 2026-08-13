@@ -256,11 +256,11 @@ function Hero() {
   const { hero } = useSiteContent();
   const overlayOpacity = Math.max(0, Math.min(80, Number(hero.overlayOpacity ?? 35))) / 100;
   return (
-    <section id="top" className="hero-section relative min-h-screen overflow-hidden bg-ink text-white">
+    <section id="top" className="hero-section relative overflow-hidden bg-ink text-white">
       <img className="hero-bg-image hero-bg-animate absolute inset-0 h-full w-full object-cover" src={hero.image || fallbackHero.image} alt="Одежда с DTF-принтом в живой lifestyle-съемке" />
-      <div className="absolute inset-0" style={{ background: `linear-gradient(to right, rgba(0,0,0,${overlayOpacity}), rgba(0,0,0,${Math.max(0.08, overlayOpacity / 2)}))` }} />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,11,10,0.22)_0%,rgba(12,11,10,0.03)_42%,rgba(12,11,10,0.36)_100%)]" />
-      <div className="hero-stage container-page relative flex min-h-screen items-center justify-start">
+      <div className="hero-contrast-overlay absolute inset-0" style={{ background: `linear-gradient(to right, rgba(0,0,0,${overlayOpacity}), rgba(0,0,0,${Math.max(0.08, overlayOpacity / 2)}))` }} />
+      <div className="hero-depth-overlay absolute inset-0" />
+      <div className="hero-stage container-page relative flex items-center justify-start">
         <div className="hero-copy-panel w-full max-w-3xl text-left">
           <h1 className="hero-title max-w-3xl text-white drop-shadow-[0_8px_34px_rgba(0,0,0,0.46)]">
             <span>{hero.titleLine1 || fallbackHero.titleLine1}</span>
